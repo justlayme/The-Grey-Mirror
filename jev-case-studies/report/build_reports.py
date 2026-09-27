@@ -449,7 +449,8 @@ def cs2(r):
             findings.append(f"At a 5% interruption ceiling (chosen on dev), {MODEL_NAMES[k]} answers turn ends in "
                             f"{c['eval']['mean_latency_s'] * 1000:,.0f} ms on average ({pct(c['eval']['interruption_rate'], 1)} interruptions on eval), "
                             f"{'saving' if saved > 0 else 'adding'} {abs(saved) * 1000:,.0f} ms per turn against the silence timeout.")
-            hero = {"value": f"{saved * 1000:,.0f} ms", "label": f"less dead air per turn at ≤5% interruptions ({MODEL_NAMES[k]} vs silence timeout)"}
+            hero = {"value": f"{saved * 1000:,.0f} ms", "label": f"less dead air per turn vs a silence timeout ({MODEL_NAMES[k]}; tuned for 5% interruptions, "
+                                                                     f"{pct(c['eval']['interruption_rate'], 1)} on held-out calls vs 5.0%)"}
         rel = [("Lexical (supervised)", ENTITY["lexical"], lx["reliability"])]
         extra += reliability_chart("Calibration: predicted vs observed turn ends (eval)", jd["reliability"], "Jev 'done?'",
                                    ENTITY["jev"], rel)
