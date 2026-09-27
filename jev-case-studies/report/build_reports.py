@@ -164,10 +164,9 @@ def cs1a(r):
     usage = r.get("jev_usage") or {}
     html_ = f"""
 <h3 id="cs1a">1A · Turning points: can Jev see a relationship change that the words hide?</h3>
-<p>Grey Mirror publishes a synthetic turning-point benchmark: 40 steady threads and 40 threads with one planted change of
-known date and direction, reporting 0% false positives, 100% detection, 100% direction and a median localisation error of
-0 days. We rebuilt that design ({r['n_threads']} threads, {r['n_messages']:,} messages, 90 days each, inside Grey Mirror's
-500–2,000-message range) and added a third arm that it does not test.</p>
+<p>Grey Mirror already publishes a turning-point benchmark: 40 threads where nothing changes and 40 where I planted one change on a known
+day. We score 0% false alarms, 100% detection, 100% right direction and 0 days off. Honestly, I wanted to know if that test is too easy.
+So I rebuilt it ({r['n_threads']} threads, {r['n_messages']:,} messages, 90 days each) and added a third group it never tested.</p>
 <ul>
 <li><b>Steady (40):</b> no change, with decoys: two or three fights that are repaired the same day, and in half the threads a
 "busy week" with lower volume but unchanged warmth. Any detection is a false positive.</li>
@@ -303,14 +302,12 @@ def cs1b(r):
                                     *[f"- {f}" for f in findings], ""]))
     html_ = f"""
 <h3 id="cs1b">1B · Before the fight: forecasting derailment in real conversations</h3>
-<p>Grey Mirror's conflict study found escalation outrunning repair by about 36 to 1 in the median history. Detecting a fight after it happens is
-easy; the product question is whether a model can see one coming. Conversations Gone Awry (Cornell, ConvoKit) is the standard public benchmark:
-pairs of real conversations from the same page, one of which ends in a personal attack while the other stays civil, with every prefix before the
-attack verified as civil. We followed the CRAFT evaluation protocol exactly (Chang &amp; Danescu-Niculescu-Mizil, EMNLP 2019): the final comment
-is never shown, a forecast is made after every comment, a conversation is flagged if any forecast crosses a threshold learned on the validation
-split, and a flag only counts if it fires before the attack. Jev receives the conversation so far as <code>state</code> and three questions
-(will the next comment be a personal attack, is the conversation heading for a breakdown, and a five-level tension score). It never sees a
-labelled example; the only fitted parameter is the decision threshold.</p>
+<p>In our own conflict research, escalation outran repair about 36 to 1. Spotting a fight after it happens is easy. What I actually want
+is to see one coming. Conversations Gone Awry, a public dataset from Cornell, is the standard test for that. It pairs real conversations
+from the same page, where one ends in a personal attack and the other stays civil. I ran it exactly the way the best published model, CRAFT,
+was scored (Chang &amp; Danescu-Niculescu-Mizil, 2019). The attack itself is never shown. Jev makes a call after every comment, and a flag
+only counts if it fires before the attack happens. CRAFT was pre-trained on these platforms and fine-tuned on thousands of labeled
+conversations. Jev got zero examples. The only thing I tuned was one cutoff number, and I tuned it on a separate validation set.</p>
 {''.join(blocks)}"""
     return {"html": html_, "md": "### 1B · Conversations Gone Awry\n\n" + "\n".join(md_blocks), "has_jev": has_jev,
             "hero": heroes.get("wiki"), "raw": r}
@@ -353,9 +350,9 @@ def cs1c(a, b):
         body = f"<p>{pending('Pending Jev run: needs measured tokens per message from 1A')}</p>"
     return f"""
 <h3 id="cs1c">1C · What it costs to read everything</h3>
-<p>Grey Mirror's headline research finding is that the signal is rare: {pct(GM['no_signal_share'], 1)} of 4.6 million messages carried no
-detectable emotional signal. A rare signal means the expensive part of the job is reading everything to find the few messages that matter.
-That is the workload Jev is priced for: input at $0.042 per million tokens, output free.</p>{body}"""
+<p>The headline from our research was simple: {pct(GM['no_signal_share'], 1)} of 4.6 million messages carried no emotional signal at
+all. If the signal is that rare, the expensive part of the job is reading everything just to find the few messages that matter. That's
+exactly the kind of work Jev is priced for: $0.042 per million tokens in, nothing for what comes out.</p>{body}"""
 
 
 # =============================================================================================
@@ -473,10 +470,10 @@ def cs2(r):
                         f"{llm['llm_latency_ms']['p50']:,.0f} ms vs {llm['jev_latency_ms_same_rows']['p50']:,.0f} ms.")
     ps = r["pause_stats_eval"]
     html_ = f"""
-<p>Every voice agent, including the phone-call companion JustLayMe runs, faces the same decision many times a minute: the caller has gone quiet;
-are they done, or thinking? Answer too early and the agent talks over them. Answer too late and every turn ends in dead air. Most production
-agents still decide with a silence timeout. This is a System One task in the literal sense: a fast, intuitive judgement made inside a real-time
-loop, where a calibrated probability is exactly what the controller needs and a long answer is useless. Jev has never been trained for it.</p>
+<p>This one has nothing to do with relationships, and that's the point. Every voice AI, including the phone-call feature I run on
+JustLayMe, has to make the same call dozens of times a minute: the caller went quiet, so are they done or just thinking? Jump in too early
+and you talk over them. Wait too long and every turn ends in dead air. Most voice agents still just wait for a set amount of silence. This
+is a snap judgment made in real time, which is exactly what TypeSafe says Jev was built for. Nobody trained it for this.</p>
 <p><b>Data.</b> Switchboard: two-person telephone calls with manually corrected word-level forced alignments (Mississippi State ISIP release).
 Every clean pause (no overlap, the other side silent) is labelled by what actually happened next: the same speaker resumed (a <i>hold</i>, where
 responding would have been an interruption) or the other person took the floor (a <i>shift</i>). Pauses followed only by a backchannel
@@ -653,11 +650,11 @@ def build():
 
     html_ = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jev Case Studies</title><style>{CSS}</style></head><body><main>
-<p class="small">Wentropy Labs · Grey Mirror by JustLayMe · {date.today():%B %-d, %Y}</p>
+<p class="small">Layne Weant · Founder, Wentropy Labs (Grey Mirror) · {date.today():%B %-d, %Y}</p>
 <h1>Same model, opposite ends of the clock</h1>
-<p class="lede">Two case studies of TypeSafe's Jev. One reads months of relationship history offline to find the day something changed. The
-other decides, inside a live phone call, whether a caller has finished speaking. Neither required a training example: only the typed questions
-changed.</p>
+<p class="lede">I tested TypeSafe's Jev on two jobs that have nothing in common. One reads months of texts between two people and finds
+the day something changed. The other sits inside a live phone call and decides whether the caller is done talking. I didn't train it on
+either one. I just changed the questions.</p>
 {banner}
 <div class="heroes">{hero_html}</div>
 <nav class="toc"><b>Contents</b><ol>
@@ -667,12 +664,13 @@ changed.</p>
 <li><a href="#method">Reproducibility, data and limits</a></li></ol></nav>
 
 <h2 id="cs1">Case study 1 · Grey Mirror × Jev: relationship intelligence at System One speed</h2>
-<p>Grey Mirror analyses complete exported message histories (iMessage, WhatsApp, Instagram and more) and measures initiation, reciprocity,
-timing, repair, escalation and affection across the whole timeline. Its published research makes the design constraints unusually explicit:
-signal is rare, claims must be withheld when the data does not support them, and every finding has to stand out from a thread's own rhythm.
-Jev's properties line up with each one. It is cheap enough to read every message, its answers are typed so they drop straight into a
-detector, and its probabilities are calibrated so the product can decide when to stay silent. This case study tests all three claims on data
-anyone can reproduce. No customer conversation was used or sent to any model.</p>
+<p>I built Grey Mirror to read a whole relationship's message history, not a screenshot. It measures who reaches out, who replies,
+how fights start and whether anyone repairs them. Publishing our own research taught me three things about this problem. Real signal is
+rare. A good tool has to know when to stay quiet. And a "finding" only counts if it stands out from that couple's normal rhythm, not
+everyone else's.</p>
+<p>That's why Jev caught my attention. It's cheap enough to read every single message, it answers in types my code can use directly, and
+its probabilities are calibrated, so I can decide when not to say anything. I wanted to see if that holds up on data anybody can check. So
+everything below is public or synthetic. I did not use a single customer's conversation, and none was sent to any model.</p>
 {A['html']}{B['html']}{econ}
 
 <h2 id="cs2">Case study 2 · Jev in the loop: when has the caller finished speaking?</h2>
