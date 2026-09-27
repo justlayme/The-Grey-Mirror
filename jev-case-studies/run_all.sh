@@ -7,6 +7,7 @@
 # Options (environment):
 #   LLM_COMPARATOR=anthropic/claude-haiku-4.5   System-Two comparator via the same gateway ("" to skip)
 #   JEV_PROVIDER=typesafe                        call api.typesafe.ai directly (uses TYPESAFE_API_KEY)
+#   JEV_PROVIDER=openrouter                      call Jev via OpenRouter (uses OPENROUTER_API_KEY)
 #   JEV_MOCK=1                                   pipeline test with fake answers; writes to results/mock only
 #
 # Expect roughly 60-80 minutes (the turn-taking run is sequential on purpose, to measure clean latency)
@@ -14,7 +15,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if [ -z "${AI_GATEWAY_API_KEY:-}" ] && [ -z "${TYPESAFE_API_KEY:-}" ] && [ "${JEV_MOCK:-}" != "1" ]; then
+if [ -z "${AI_GATEWAY_API_KEY:-}" ] && [ -z "${TYPESAFE_API_KEY:-}" ] && [ -z "${OPENROUTER_API_KEY:-}" ] && [ "${JEV_MOCK:-}" != "1" ]; then
   echo "error: set AI_GATEWAY_API_KEY (or run with JEV_MOCK=1 to test the pipeline)" >&2
   exit 1
 fi

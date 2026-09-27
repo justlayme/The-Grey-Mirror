@@ -5,7 +5,8 @@ experiment never double-spends and every published number can be replayed from t
 
 Environment:
   AI_GATEWAY_API_KEY   Vercel AI Gateway key (default provider)
-  JEV_PROVIDER         "gateway" (default) or "typesafe" (direct, uses TYPESAFE_API_KEY)
+  JEV_PROVIDER         "gateway" (default), "typesafe" (direct, TYPESAFE_API_KEY) or
+                       "openrouter" (OPENROUTER_API_KEY, model typesafe/jev-1.13)
   JEV_MOCK=1           Pipeline-test mode: deterministic fake answers, never real results.
                        Every artifact produced in this mode is stamped mock=true and the
                        report builder refuses to present it as a finding.
@@ -160,7 +161,11 @@ class JevClient(_Base):
     def __init__(self, namespace: str, concurrency: int = 16, model: str | None = None):
         super().__init__(namespace, concurrency)
         provider = os.environ.get("JEV_PROVIDER", "gateway")
-        if provider == "typesafe":
+        if provider == "openrouter":
+            self.url = "https://openrouter.ai/api/v1/systemone"
+            self.model = model or os.environ.get("JEV_MODEL", "typesafe/jev-1.13")
+            self.api_key = os.environ.get("OPENROUTER_API_KEY", "")
+        elif provider == "typesafe":
             self.url = "https://api.typesafe.ai/v1/systemone"
             self.model = model or os.environ.get("JEV_MODEL", "jev-latest")
             self.api_key = os.environ.get("TYPESAFE_API_KEY", "")
@@ -199,6 +204,8 @@ class JevClient(_Base):
                     data, lat = await self._post(self.url, headers, payload)
             usage = data.get("usage") or {}
             gw_cost = (((data.get("provider_metadata") or {}).get("gateway") or {}).get("cost"))
+            if gw_cost is None:
+                gw_cost = usage.get("cost")  # OpenRouter reports cost inside usage
             in_tok = int(usage.get("input_tokens") or 0)
             rec = {
                 "answers": data.get("answers", {}),
