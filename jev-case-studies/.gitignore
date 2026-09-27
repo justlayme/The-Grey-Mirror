@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+# third-party corpora and everything derived from their text: fetched/rebuilt by run_all.sh
+data/raw/
+data/prepared/
+# API response cache (numbers only, but large); keep locally to replay runs for free
+data/cache/
+# pipeline-test output is never a finding
+results/mock/
+reports/mock/
+dist/

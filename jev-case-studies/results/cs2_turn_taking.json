@@ -1,0 +1,2108 @@
+{
+  "experiment": "cs2_turn_taking_switchboard",
+  "mock": false,
+  "n_dev": 1200,
+  "n_eval": 2400,
+  "eval_shift_rate": 0.28875,
+  "vad_s": 0.2,
+  "pause_stats_eval": {
+    "hold_pause_pctl_50_75_90_95": [
+      0.456,
+      0.69,
+      0.98,
+      1.196
+    ],
+    "shift_gap_pctl_50_75_90": [
+      0.261,
+      0.497,
+      0.776
+    ]
+  },
+  "questions_example": {
+    "done": {
+      "type": "noul",
+      "instructions": "Speaker A has just gone quiet. Has Speaker A finished what they were saying, so that it is now the other person's turn to talk?",
+      "criteria": {
+        "true": "Speaker A's last words complete a thought and hand the conversation over",
+        "false": "Speaker A is mid-sentence, mid-list, searching for a word, or clearly has more to say"
+      }
+    },
+    "unfinished": {
+      "type": "noul",
+      "instructions": "Do Speaker A's last words stop in the middle of a sentence or phrase?"
+    },
+    "question": {
+      "type": "noul",
+      "instructions": "Did Speaker A just ask the other person a question or directly invite them to respond?"
+    },
+    "yield": {
+      "type": "score",
+      "instructions": "How likely is it that Speaker A is done talking for now?",
+      "criteria": [
+        "Clearly mid-sentence and will continue",
+        "Probably continuing",
+        "Could go either way",
+        "Probably finished",
+        "Clearly finished and handing over the turn"
+      ]
+    }
+  },
+  "llm_system_prompt": "You are the turn-taking detector inside a voice assistant. You receive a live phone-call transcript (speech recognition output, no punctuation). The last speaker listed has just gone silent. Estimate the probability that they have finished their turn and it is now the other person's turn to speak, as opposed to pausing mid-thought and about to continue. Reply with only JSON: {\"probability\": <number from 0 to 1>}",
+  "models": {
+    "lexical_lr_supervised": {
+      "n": 2400,
+      "base_rate": 0.28875,
+      "auc": 0.8319604954051352,
+      "aupr": 0.689468209743116,
+      "brier": 0.14188196434057426,
+      "log_loss": 0.44062631769674215,
+      "ece": 0.017559434330396206,
+      "ece_quantile": 0.02033816015382014,
+      "reliability": [
+        [
+          0.0,
+          0.1,
+          0.04818764051192903,
+          0.0609597924773022,
+          771
+        ],
+        [
+          0.1,
+          0.2,
+          0.14881000952786932,
+          0.1702127659574468,
+          470
+        ],
+        [
+          0.2,
+          0.30000000000000004,
+          0.24775147872426354,
+          0.23745819397993312,
+          299
+        ],
+        [
+          0.30000000000000004,
+          0.4,
+          0.3440164989374427,
+          0.3244444444444444,
+          225
+        ],
+        [
+          0.4,
+          0.5,
+          0.44540617238086516,
+          0.5,
+          142
+        ],
+        [
+          0.5,
+          0.6000000000000001,
+          0.546824079389247,
+          0.5431034482758621,
+          116
+        ],
+        [
+          0.6000000000000001,
+          0.7000000000000001,
+          0.654966529646079,
+          0.6616541353383458,
+          133
+        ],
+        [
+          0.7000000000000001,
+          0.8,
+          0.7483889558994854,
+          0.7096774193548387,
+          93
+        ],
+        [
+          0.8,
+          0.9,
+          0.8635770723363175,
+          0.8803418803418803,
+          117
+        ],
+        [
+          0.9,
+          1.0,
+          0.9152820465536204,
+          0.9117647058823529,
+          34
+        ]
+      ],
+      "selective": [
+        [
+          0.05,
+          1.0
+        ],
+        [
+          0.1,
+          0.975
+        ],
+        [
+          0.15,
+          0.9722222222222222
+        ],
+        [
+          0.2,
+          0.9666666666666667
+        ],
+        [
+          0.25,
+          0.9583333333333334
+        ],
+        [
+          0.3,
+          0.9486111111111111
+        ],
+        [
+          0.35,
+          0.9357142857142857
+        ],
+        [
+          0.39999999999999997,
+          0.928125
+        ],
+        [
+          0.44999999999999996,
+          0.9203703703703704
+        ],
+        [
+          0.49999999999999994,
+          0.9116666666666666
+        ],
+        [
+          0.5499999999999999,
+          0.8977272727272727
+        ],
+        [
+          0.6,
+          0.8951388888888889
+        ],
+        [
+          0.65,
+          0.8807692307692307
+        ],
+        [
+          0.7,
+          0.8738095238095238
+        ],
+        [
+          0.75,
+          0.8627777777777778
+        ],
+        [
+          0.7999999999999999,
+          0.8494791666666667
+        ],
+        [
+          0.85,
+          0.8455882352941176
+        ],
+        [
+          0.9,
+          0.8310185185185185
+        ],
+        [
+          0.95,
+          0.8140350877192982
+        ],
+        [
+          1.0,
+          0.7983333333333333
+        ]
+      ],
+      "auc_ci": [
+        0.814452725572461,
+        0.8484069919948697
+      ],
+      "ece_ci": [
+        0.014227683930381643,
+        0.03756200712863172
+      ]
+    }
+  },
+  "policies": {
+    "silence_only": {
+      "curve_eval": [
+        {
+          "T": 0.2,
+          "interruption_rate": 0.9958992384299942,
+          "median_latency_s": 0.2,
+          "mean_latency_s": 0.19999999999999996,
+          "p90_latency_s": 0.2
+        },
+        {
+          "T": 0.25,
+          "interruption_rate": 0.8845928529584065,
+          "median_latency_s": 0.25,
+          "mean_latency_s": 0.25,
+          "p90_latency_s": 0.25
+        },
+        {
+          "T": 0.3,
+          "interruption_rate": 0.79203280609256,
+          "median_latency_s": 0.3,
+          "mean_latency_s": 0.3,
+          "p90_latency_s": 0.3
+        },
+        {
+          "T": 0.35,
+          "interruption_rate": 0.6877562975981254,
+          "median_latency_s": 0.35,
+          "mean_latency_s": 0.3500000000000001,
+          "p90_latency_s": 0.35
+        },
+        {
+          "T": 0.4,
+          "interruption_rate": 0.5916813122437024,
+          "median_latency_s": 0.4,
+          "mean_latency_s": 0.3999999999999999,
+          "p90_latency_s": 0.4
+        },
+        {
+          "T": 0.45,
+          "interruption_rate": 0.5061511423550088,
+          "median_latency_s": 0.45,
+          "mean_latency_s": 0.4500000000000002,
+          "p90_latency_s": 0.45
+        },
+        {
+          "T": 0.5,
+          "interruption_rate": 0.43995313415348564,
+          "median_latency_s": 0.5,
+          "mean_latency_s": 0.5,
+          "p90_latency_s": 0.5
+        },
+        {
+          "T": 0.55,
+          "interruption_rate": 0.37785588752196836,
+          "median_latency_s": 0.55,
+          "mean_latency_s": 0.5499999999999998,
+          "p90_latency_s": 0.55
+        },
+        {
+          "T": 0.6,
+          "interruption_rate": 0.3251318101933216,
+          "median_latency_s": 0.6,
+          "mean_latency_s": 0.6,
+          "p90_latency_s": 0.6
+        },
+        {
+          "T": 0.65,
+          "interruption_rate": 0.28353837141183363,
+          "median_latency_s": 0.65,
+          "mean_latency_s": 0.65,
+          "p90_latency_s": 0.65
+        },
+        {
+          "T": 0.7,
+          "interruption_rate": 0.24135910954891623,
+          "median_latency_s": 0.7,
+          "mean_latency_s": 0.7000000000000002,
+          "p90_latency_s": 0.7
+        },
+        {
+          "T": 0.75,
+          "interruption_rate": 0.2050380785002929,
+          "median_latency_s": 0.75,
+          "mean_latency_s": 0.75,
+          "p90_latency_s": 0.75
+        },
+        {
+          "T": 0.8,
+          "interruption_rate": 0.17926186291739896,
+          "median_latency_s": 0.8,
+          "mean_latency_s": 0.7999999999999998,
+          "p90_latency_s": 0.8
+        },
+        {
+          "T": 0.85,
+          "interruption_rate": 0.15582893966022263,
+          "median_latency_s": 0.85,
+          "mean_latency_s": 0.8499999999999996,
+          "p90_latency_s": 0.85
+        },
+        {
+          "T": 0.9,
+          "interruption_rate": 0.12946690099589925,
+          "median_latency_s": 0.9,
+          "mean_latency_s": 0.9000000000000004,
+          "p90_latency_s": 0.9
+        },
+        {
+          "T": 0.95,
+          "interruption_rate": 0.10661980082015231,
+          "median_latency_s": 0.95,
+          "mean_latency_s": 0.9499999999999998,
+          "p90_latency_s": 0.95
+        },
+        {
+          "T": 1.0,
+          "interruption_rate": 0.09666080843585237,
+          "median_latency_s": 1.0,
+          "mean_latency_s": 1.0,
+          "p90_latency_s": 1.0
+        },
+        {
+          "T": 1.05,
+          "interruption_rate": 0.07557117750439367,
+          "median_latency_s": 1.05,
+          "mean_latency_s": 1.05,
+          "p90_latency_s": 1.05
+        },
+        {
+          "T": 1.1,
+          "interruption_rate": 0.06561218512009373,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 1.0999999999999996,
+          "p90_latency_s": 1.1
+        },
+        {
+          "T": 1.15,
+          "interruption_rate": 0.05916813122437024,
+          "median_latency_s": 1.15,
+          "mean_latency_s": 1.1500000000000004,
+          "p90_latency_s": 1.15
+        },
+        {
+          "T": 1.2,
+          "interruption_rate": 0.04979496192149971,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 1.2,
+          "p90_latency_s": 1.2
+        },
+        {
+          "T": 1.25,
+          "interruption_rate": 0.043350908025776215,
+          "median_latency_s": 1.25,
+          "mean_latency_s": 1.25,
+          "p90_latency_s": 1.25
+        },
+        {
+          "T": 1.3,
+          "interruption_rate": 0.03749267721148213,
+          "median_latency_s": 1.3,
+          "mean_latency_s": 1.3,
+          "p90_latency_s": 1.3
+        },
+        {
+          "T": 1.35,
+          "interruption_rate": 0.031048623315758642,
+          "median_latency_s": 1.35,
+          "mean_latency_s": 1.3499999999999996,
+          "p90_latency_s": 1.35
+        },
+        {
+          "T": 1.4,
+          "interruption_rate": 0.028119507908611598,
+          "median_latency_s": 1.4,
+          "mean_latency_s": 1.4000000000000004,
+          "p90_latency_s": 1.4
+        },
+        {
+          "T": 1.45,
+          "interruption_rate": 0.026947861745752782,
+          "median_latency_s": 1.45,
+          "mean_latency_s": 1.4499999999999995,
+          "p90_latency_s": 1.45
+        },
+        {
+          "T": 1.5,
+          "interruption_rate": 0.022847100175746926,
+          "median_latency_s": 1.5,
+          "mean_latency_s": 1.5,
+          "p90_latency_s": 1.5
+        },
+        {
+          "T": 1.55,
+          "interruption_rate": 0.01991798476859988,
+          "median_latency_s": 1.55,
+          "mean_latency_s": 1.5500000000000007,
+          "p90_latency_s": 1.55
+        },
+        {
+          "T": 1.6,
+          "interruption_rate": 0.018746338605741066,
+          "median_latency_s": 1.6,
+          "mean_latency_s": 1.5999999999999996,
+          "p90_latency_s": 1.6
+        },
+        {
+          "T": 1.65,
+          "interruption_rate": 0.01757469244288225,
+          "median_latency_s": 1.65,
+          "mean_latency_s": 1.6499999999999997,
+          "p90_latency_s": 1.65
+        },
+        {
+          "T": 1.7,
+          "interruption_rate": 0.01698886936145284,
+          "median_latency_s": 1.7,
+          "mean_latency_s": 1.6999999999999993,
+          "p90_latency_s": 1.7
+        },
+        {
+          "T": 1.75,
+          "interruption_rate": 0.015231400117164616,
+          "median_latency_s": 1.75,
+          "mean_latency_s": 1.75,
+          "p90_latency_s": 1.75
+        },
+        {
+          "T": 1.8,
+          "interruption_rate": 0.012302284710017574,
+          "median_latency_s": 1.8,
+          "mean_latency_s": 1.8000000000000007,
+          "p90_latency_s": 1.8
+        },
+        {
+          "T": 1.85,
+          "interruption_rate": 0.011716461628588167,
+          "median_latency_s": 1.85,
+          "mean_latency_s": 1.8500000000000003,
+          "p90_latency_s": 1.85
+        },
+        {
+          "T": 1.9,
+          "interruption_rate": 0.011130638547158758,
+          "median_latency_s": 1.9,
+          "mean_latency_s": 1.8999999999999997,
+          "p90_latency_s": 1.9
+        },
+        {
+          "T": 1.95,
+          "interruption_rate": 0.01054481546572935,
+          "median_latency_s": 1.95,
+          "mean_latency_s": 1.9499999999999993,
+          "p90_latency_s": 1.95
+        },
+        {
+          "T": 2.0,
+          "interruption_rate": 0.009373169302870533,
+          "median_latency_s": 2.0,
+          "mean_latency_s": 2.0,
+          "p90_latency_s": 2.0
+        },
+        {
+          "T": 2.05,
+          "interruption_rate": 0.008201523140011716,
+          "median_latency_s": 2.05,
+          "mean_latency_s": 2.0500000000000007,
+          "p90_latency_s": 2.05
+        },
+        {
+          "T": 2.1,
+          "interruption_rate": 0.007615700058582308,
+          "median_latency_s": 2.1,
+          "mean_latency_s": 2.1,
+          "p90_latency_s": 2.1
+        },
+        {
+          "T": 2.15,
+          "interruption_rate": 0.007615700058582308,
+          "median_latency_s": 2.15,
+          "mean_latency_s": 2.15,
+          "p90_latency_s": 2.15
+        },
+        {
+          "T": 2.2,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.2,
+          "mean_latency_s": 2.1999999999999993,
+          "p90_latency_s": 2.2
+        },
+        {
+          "T": 2.25,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.25,
+          "mean_latency_s": 2.25,
+          "p90_latency_s": 2.25
+        },
+        {
+          "T": 2.3,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.3,
+          "mean_latency_s": 2.3000000000000007,
+          "p90_latency_s": 2.3
+        },
+        {
+          "T": 2.35,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.35,
+          "mean_latency_s": 2.35,
+          "p90_latency_s": 2.35
+        },
+        {
+          "T": 2.4,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.4,
+          "mean_latency_s": 2.4,
+          "p90_latency_s": 2.4
+        },
+        {
+          "T": 2.45,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.45,
+          "mean_latency_s": 2.4499999999999993,
+          "p90_latency_s": 2.45
+        },
+        {
+          "T": 2.5,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.5,
+          "mean_latency_s": 2.5,
+          "p90_latency_s": 2.5
+        },
+        {
+          "T": 2.55,
+          "interruption_rate": 0.005858230814294083,
+          "median_latency_s": 2.55,
+          "mean_latency_s": 2.5500000000000007,
+          "p90_latency_s": 2.55
+        },
+        {
+          "T": 2.6,
+          "interruption_rate": 0.005272407732864675,
+          "median_latency_s": 2.6,
+          "mean_latency_s": 2.6,
+          "p90_latency_s": 2.6
+        },
+        {
+          "T": 2.65,
+          "interruption_rate": 0.005272407732864675,
+          "median_latency_s": 2.65,
+          "mean_latency_s": 2.65,
+          "p90_latency_s": 2.65
+        },
+        {
+          "T": 2.7,
+          "interruption_rate": 0.0046865846514352666,
+          "median_latency_s": 2.7,
+          "mean_latency_s": 2.6999999999999993,
+          "p90_latency_s": 2.7
+        },
+        {
+          "T": 2.75,
+          "interruption_rate": 0.0046865846514352666,
+          "median_latency_s": 2.75,
+          "mean_latency_s": 2.75,
+          "p90_latency_s": 2.75
+        },
+        {
+          "T": 2.8,
+          "interruption_rate": 0.0046865846514352666,
+          "median_latency_s": 2.8,
+          "mean_latency_s": 2.8000000000000007,
+          "p90_latency_s": 2.8
+        },
+        {
+          "T": 2.85,
+          "interruption_rate": 0.0046865846514352666,
+          "median_latency_s": 2.85,
+          "mean_latency_s": 2.850000000000001,
+          "p90_latency_s": 2.85
+        },
+        {
+          "T": 2.9,
+          "interruption_rate": 0.004100761570005858,
+          "median_latency_s": 2.9,
+          "mean_latency_s": 2.899999999999999,
+          "p90_latency_s": 2.9
+        },
+        {
+          "T": 2.95,
+          "interruption_rate": 0.004100761570005858,
+          "median_latency_s": 2.95,
+          "mean_latency_s": 2.9499999999999993,
+          "p90_latency_s": 2.95
+        },
+        {
+          "T": 3.0,
+          "interruption_rate": 0.004100761570005858,
+          "median_latency_s": 3.0,
+          "mean_latency_s": 3.0,
+          "p90_latency_s": 3.0
+        }
+      ],
+      "chosen_on_dev": {
+        "interrupt_le_5pct": {
+          "policy": {
+            "T": 1.2
+          },
+          "dev": {
+            "T": 1.2,
+            "interruption_rate": 0.04772727272727273,
+            "median_latency_s": 1.2,
+            "mean_latency_s": 1.1999999999999997,
+            "p90_latency_s": 1.2
+          },
+          "eval": {
+            "interruption_rate": 0.04979496192149971,
+            "median_latency_s": 1.2,
+            "mean_latency_s": 1.2,
+            "p90_latency_s": 1.2
+          }
+        },
+        "interrupt_le_10pct": {
+          "policy": {
+            "T": 1.0
+          },
+          "dev": {
+            "T": 1.0,
+            "interruption_rate": 0.09090909090909091,
+            "median_latency_s": 1.0,
+            "mean_latency_s": 1.0,
+            "p90_latency_s": 1.0
+          },
+          "eval": {
+            "interruption_rate": 0.09666080843585237,
+            "median_latency_s": 1.0,
+            "mean_latency_s": 1.0,
+            "p90_latency_s": 1.0
+          }
+        },
+        "interrupt_le_20pct": {
+          "policy": {
+            "T": 0.8
+          },
+          "dev": {
+            "T": 0.8,
+            "interruption_rate": 0.17386363636363636,
+            "median_latency_s": 0.8,
+            "mean_latency_s": 0.7999999999999999,
+            "p90_latency_s": 0.8
+          },
+          "eval": {
+            "interruption_rate": 0.17926186291739896,
+            "median_latency_s": 0.8,
+            "mean_latency_s": 0.7999999999999998,
+            "p90_latency_s": 0.8
+          }
+        }
+      }
+    },
+    "lexical_lr_supervised": {
+      "frontier_eval": [
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 4.0,
+          "interruption_rate": 0.0029291154071470417,
+          "median_latency_s": 2.3797803435211193,
+          "mean_latency_s": 2.3821469702568985,
+          "p90_latency_s": 3.854322022449057
+        },
+        {
+          "family": "adaptive",
+          "a": 0.6,
+          "b": 3.2,
+          "interruption_rate": 0.0035149384885764497,
+          "median_latency_s": 2.1838242748168954,
+          "mean_latency_s": 2.1857175762055188,
+          "p90_latency_s": 3.363457617959246
+        },
+        {
+          "family": "adaptive",
+          "a": 0.8,
+          "b": 2.6,
+          "interruption_rate": 0.004100761570005858,
+          "median_latency_s": 2.0868572232887277,
+          "mean_latency_s": 2.088395530666984,
+          "p90_latency_s": 3.045309314591887
+        },
+        {
+          "family": "adaptive",
+          "a": 0.7,
+          "b": 2.8,
+          "interruption_rate": 0.0046865846514352666,
+          "median_latency_s": 2.0858462404647833,
+          "mean_latency_s": 2.0875028791798287,
+          "p90_latency_s": 3.1180254157143397
+        },
+        {
+          "family": "adaptive",
+          "a": 0.6,
+          "b": 2.8,
+          "interruption_rate": 0.005272407732864675,
+          "median_latency_s": 1.9858462404647836,
+          "mean_latency_s": 1.9875028791798293,
+          "p90_latency_s": 3.01802541571434
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 3.0,
+          "interruption_rate": 0.006444053895723492,
+          "median_latency_s": 1.8848352576408396,
+          "mean_latency_s": 1.886610227692674,
+          "p90_latency_s": 2.9907415168367923
+        },
+        {
+          "family": "adaptive",
+          "a": 0.5,
+          "b": 2.6,
+          "interruption_rate": 0.007615700058582308,
+          "median_latency_s": 1.7868572232887276,
+          "mean_latency_s": 1.788395530666984,
+          "p90_latency_s": 2.745309314591887
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 2.8,
+          "interruption_rate": 0.008201523140011716,
+          "median_latency_s": 1.7858462404647835,
+          "mean_latency_s": 1.7875028791798286,
+          "p90_latency_s": 2.81802541571434
+        },
+        {
+          "family": "adaptive",
+          "a": 0.6,
+          "b": 2.2,
+          "interruption_rate": 0.009373169302870533,
+          "median_latency_s": 1.6888791889366157,
+          "mean_latency_s": 1.6901808336412945,
+          "p90_latency_s": 2.499877112346981
+        },
+        {
+          "family": "adaptive",
+          "a": 0.9,
+          "b": 1.4,
+          "interruption_rate": 0.00995899238429994,
+          "median_latency_s": 1.592923120232392,
+          "mean_latency_s": 1.5937514395899146,
+          "p90_latency_s": 2.1090127078571697
+        },
+        {
+          "family": "adaptive",
+          "a": 0.5,
+          "b": 2.2,
+          "interruption_rate": 0.01054481546572935,
+          "median_latency_s": 1.5888791889366158,
+          "mean_latency_s": 1.5901808336412946,
+          "p90_latency_s": 2.3998771123469815
+        },
+        {
+          "family": "adaptive",
+          "a": 0.5,
+          "b": 2.0,
+          "interruption_rate": 0.011130638547158758,
+          "median_latency_s": 1.4898901717605597,
+          "mean_latency_s": 1.4910734851284493,
+          "p90_latency_s": 2.2271610112245286
+        },
+        {
+          "family": "adaptive",
+          "a": 0.5,
+          "b": 1.8,
+          "interruption_rate": 0.012888107791446984,
+          "median_latency_s": 1.3909011545845038,
+          "mean_latency_s": 1.3919661366156044,
+          "p90_latency_s": 2.0544449101020756
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 2.0,
+          "interruption_rate": 0.014059753954305799,
+          "median_latency_s": 1.3898901717605598,
+          "mean_latency_s": 1.3910734851284494,
+          "p90_latency_s": 2.1271610112245285
+        },
+        {
+          "family": "adaptive",
+          "a": 0.3,
+          "b": 2.2,
+          "interruption_rate": 0.01698886936145284,
+          "median_latency_s": 1.3888791889366159,
+          "mean_latency_s": 1.3901808336412942,
+          "p90_latency_s": 2.1998771123469814
+        },
+        {
+          "family": "adaptive",
+          "a": 0.6,
+          "b": 1.4,
+          "interruption_rate": 0.01757469244288225,
+          "median_latency_s": 1.2929231202323916,
+          "mean_latency_s": 1.2937514395899143,
+          "p90_latency_s": 1.8090127078571698
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 1.8,
+          "interruption_rate": 0.018746338605741066,
+          "median_latency_s": 1.2909011545845037,
+          "mean_latency_s": 1.2919661366156043,
+          "p90_latency_s": 1.9544449101020758
+        },
+        {
+          "family": "adaptive",
+          "a": 0.3,
+          "b": 2.0,
+          "interruption_rate": 0.019332161687170474,
+          "median_latency_s": 1.2898901717605598,
+          "mean_latency_s": 1.2910734851284495,
+          "p90_latency_s": 2.0271610112245284
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 2.2,
+          "interruption_rate": 0.01991798476859988,
+          "median_latency_s": 1.2888791889366158,
+          "mean_latency_s": 1.2901808336412943,
+          "p90_latency_s": 2.0998771123469813
+        },
+        {
+          "family": "adaptive",
+          "a": 0.5,
+          "b": 1.4,
+          "interruption_rate": 0.025190392501464556,
+          "median_latency_s": 1.1929231202323918,
+          "mean_latency_s": 1.1937514395899145,
+          "p90_latency_s": 1.70901270785717
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 1.6,
+          "interruption_rate": 0.025776215582893967,
+          "median_latency_s": 1.1919121374084478,
+          "mean_latency_s": 1.1928587881027595,
+          "p90_latency_s": 1.781728808979623
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 2.0,
+          "interruption_rate": 0.026362038664323375,
+          "median_latency_s": 1.1898901717605597,
+          "mean_latency_s": 1.1910734851284492,
+          "p90_latency_s": 1.9271610112245285
+        },
+        {
+          "family": "adaptive",
+          "a": 0.4,
+          "b": 1.4,
+          "interruption_rate": 0.029876977152899824,
+          "median_latency_s": 1.092923120232392,
+          "mean_latency_s": 1.0937514395899146,
+          "p90_latency_s": 1.6090127078571699
+        },
+        {
+          "family": "adaptive",
+          "a": 0.3,
+          "b": 1.6,
+          "interruption_rate": 0.031048623315758642,
+          "median_latency_s": 1.0919121374084477,
+          "mean_latency_s": 1.0928587881027594,
+          "p90_latency_s": 1.681728808979623
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 1.8,
+          "interruption_rate": 0.03222026947861746,
+          "median_latency_s": 1.0909011545845038,
+          "mean_latency_s": 1.0919661366156044,
+          "p90_latency_s": 1.7544449101020758
+        },
+        {
+          "family": "adaptive",
+          "a": 0.3,
+          "b": 1.4,
+          "interruption_rate": 0.03866432337434095,
+          "median_latency_s": 0.9929231202323918,
+          "mean_latency_s": 0.9937514395899146,
+          "p90_latency_s": 1.50901270785717
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 1.6,
+          "interruption_rate": 0.03925014645577036,
+          "median_latency_s": 0.9919121374084479,
+          "mean_latency_s": 0.9928587881027595,
+          "p90_latency_s": 1.5817288089796229
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 1.4,
+          "interruption_rate": 0.04745166959578207,
+          "median_latency_s": 0.8929231202323917,
+          "mean_latency_s": 0.8937514395899143,
+          "p90_latency_s": 1.40901270785717
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 1.2,
+          "interruption_rate": 0.07322788517867604,
+          "median_latency_s": 0.7939341030563358,
+          "mean_latency_s": 0.7946440910770696,
+          "p90_latency_s": 1.236296606734717
+        },
+        {
+          "family": "gate",
+          "theta": 0.61,
+          "fallback": 1.2,
+          "interruption_rate": 0.09314586994727592,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7895670995670995,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.6,
+          "fallback": 1.2,
+          "interruption_rate": 0.09607498535442296,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7852467532467532,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.59,
+          "fallback": 1.2,
+          "interruption_rate": 0.09783245459871119,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7722857142857142,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.58,
+          "fallback": 1.2,
+          "interruption_rate": 0.10017574692442882,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7679653679653681,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.64,
+          "fallback": 1.1,
+          "interruption_rate": 0.10134739308728764,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.7604963924963923,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.57,
+          "fallback": 1.2,
+          "interruption_rate": 0.10310486233157587,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7578845598845598,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.56,
+          "fallback": 1.2,
+          "interruption_rate": 0.1048623315758641,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7492438672438673,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.62,
+          "fallback": 1.1,
+          "interruption_rate": 0.10661980082015231,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.7423549783549783,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.55,
+          "fallback": 1.2,
+          "interruption_rate": 0.10720562390158173,
+          "median_latency_s": 1.2,
+          "mean_latency_s": 0.7406031746031745,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.61,
+          "fallback": 1.1,
+          "interruption_rate": 0.10837727006444053,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.7306926406926405,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.6,
+          "fallback": 1.1,
+          "interruption_rate": 0.11130638547158758,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.7268051948051947,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 1.0,
+          "interruption_rate": 0.11189220855301699,
+          "median_latency_s": 0.6949450858802799,
+          "mean_latency_s": 0.6955367425642247,
+          "p90_latency_s": 1.0635805056122642
+        },
+        {
+          "family": "gate",
+          "theta": 0.56,
+          "fallback": 1.1,
+          "interruption_rate": 0.1195079086115993,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6944098124098124,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.55,
+          "fallback": 1.1,
+          "interruption_rate": 0.12185120093731693,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6866349206349206,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.54,
+          "fallback": 1.1,
+          "interruption_rate": 0.1253661394258934,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6788600288600287,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.53,
+          "fallback": 1.1,
+          "interruption_rate": 0.1282952548330404,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6723809523809523,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.52,
+          "fallback": 1.1,
+          "interruption_rate": 0.1341534856473345,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6633102453102453,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.51,
+          "fallback": 1.1,
+          "interruption_rate": 0.13766842413591096,
+          "median_latency_s": 1.1,
+          "mean_latency_s": 0.6542395382395382,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.5,
+          "fallback": 1.1,
+          "interruption_rate": 0.14001171646162858,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6451688311688312,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.49,
+          "fallback": 1.1,
+          "interruption_rate": 0.14235500878734622,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6348023088023088,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.48,
+          "fallback": 1.1,
+          "interruption_rate": 0.14645577035735208,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6296190476190476,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.47,
+          "fallback": 1.1,
+          "interruption_rate": 0.15055653192735793,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6205483405483405,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.42,
+          "fallback": 1.2,
+          "interruption_rate": 0.15289982425307558,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6196334776334775,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.46,
+          "fallback": 1.1,
+          "interruption_rate": 0.1540714704159344,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6114776334776335,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.45,
+          "fallback": 1.1,
+          "interruption_rate": 0.15875805506736965,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.6011111111111112,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.44,
+          "fallback": 1.1,
+          "interruption_rate": 0.1616871704745167,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5972236652236652,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.43,
+          "fallback": 1.1,
+          "interruption_rate": 0.1634446397188049,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5868571428571429,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.42,
+          "fallback": 1.1,
+          "interruption_rate": 0.1675454012888108,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5777864357864358,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.38,
+          "fallback": 1.2,
+          "interruption_rate": 0.17281780902167546,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5706695526695528,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.41,
+          "fallback": 1.1,
+          "interruption_rate": 0.17340363210310486,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5687157287157287,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.37,
+          "fallback": 1.2,
+          "interruption_rate": 0.17867603983596952,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5577085137085136,
+          "p90_latency_s": 1.2
+        },
+        {
+          "family": "gate",
+          "theta": 0.4,
+          "fallback": 1.1,
+          "interruption_rate": 0.17926186291739896,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5531659451659451,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.39,
+          "fallback": 1.1,
+          "interruption_rate": 0.18394844756883422,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5415036075036075,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.38,
+          "fallback": 1.1,
+          "interruption_rate": 0.18746338605741067,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5337287157287157,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.37,
+          "fallback": 1.1,
+          "interruption_rate": 0.19332161687170474,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.522066378066378,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.36,
+          "fallback": 1.1,
+          "interruption_rate": 0.20152314001171645,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.512995670995671,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.35,
+          "fallback": 1.1,
+          "interruption_rate": 0.20855301698886936,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5091082251082252,
+          "p90_latency_s": 1.1
+        },
+        {
+          "family": "gate",
+          "theta": 0.39,
+          "fallback": 1.0,
+          "interruption_rate": 0.2097246631517282,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.5036969696969698,
+          "p90_latency_s": 1.0
+        },
+        {
+          "family": "gate",
+          "theta": 0.38,
+          "fallback": 1.0,
+          "interruption_rate": 0.21323960164030462,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4967878787878788,
+          "p90_latency_s": 1.0
+        },
+        {
+          "family": "gate",
+          "theta": 0.37,
+          "fallback": 1.0,
+          "interruption_rate": 0.2190978324545987,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4864242424242424,
+          "p90_latency_s": 1.0
+        },
+        {
+          "family": "gate",
+          "theta": 0.36,
+          "fallback": 1.0,
+          "interruption_rate": 0.22671353251318102,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4783636363636363,
+          "p90_latency_s": 1.0
+        },
+        {
+          "family": "gate",
+          "theta": 0.4,
+          "fallback": 0.9,
+          "interruption_rate": 0.2325717633274751,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.47495526695526696,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.35,
+          "fallback": 1.0,
+          "interruption_rate": 0.23374340949033393,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.47490909090909084,
+          "p90_latency_s": 1.0
+        },
+        {
+          "family": "gate",
+          "theta": 0.39,
+          "fallback": 0.9,
+          "interruption_rate": 0.23667252489748097,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4658903318903319,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.38,
+          "fallback": 0.9,
+          "interruption_rate": 0.2401874633860574,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.45984704184704184,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.37,
+          "fallback": 0.9,
+          "interruption_rate": 0.2460456942003515,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4507821067821068,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.36,
+          "fallback": 0.9,
+          "interruption_rate": 0.2536613942589338,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.44373160173160175,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.35,
+          "fallback": 0.9,
+          "interruption_rate": 0.2606912712360867,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4407099567099568,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.34,
+          "fallback": 0.9,
+          "interruption_rate": 0.268306971294669,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4336594516594517,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.33,
+          "fallback": 0.9,
+          "interruption_rate": 0.281195079086116,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4266089466089466,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.38,
+          "fallback": 0.8,
+          "interruption_rate": 0.28471001757469244,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.42290620490620484,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.32,
+          "fallback": 0.9,
+          "interruption_rate": 0.29056824838898654,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4145223665223665,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.36,
+          "fallback": 0.8,
+          "interruption_rate": 0.29701230228471004,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4090995670995671,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.31,
+          "fallback": 0.9,
+          "interruption_rate": 0.30169888693614527,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4054574314574315,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.34,
+          "fallback": 0.8,
+          "interruption_rate": 0.31165787932044525,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.4004704184704184,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.29,
+          "fallback": 0.9,
+          "interruption_rate": 0.322788517867604,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.39337085137085137,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.32,
+          "fallback": 0.8,
+          "interruption_rate": 0.3321616871704745,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.38407503607503607,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.37,
+          "fallback": 0.7,
+          "interruption_rate": 0.3409490333919156,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.37949783549783545,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.31,
+          "fallback": 0.8,
+          "interruption_rate": 0.3427065026362039,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3763088023088022,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.36,
+          "fallback": 0.7,
+          "interruption_rate": 0.3468072642062097,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.37446753246753245,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.35,
+          "fallback": 0.7,
+          "interruption_rate": 0.3526654950205038,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3723116883116883,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.26,
+          "fallback": 0.9,
+          "interruption_rate": 0.35735207967193905,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.37221933621933617,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.34,
+          "fallback": 0.7,
+          "interruption_rate": 0.3602811950790861,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.36728138528138526,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.29,
+          "fallback": 0.8,
+          "interruption_rate": 0.36145284124194493,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3659538239538239,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.33,
+          "fallback": 0.7,
+          "interruption_rate": 0.37199765670767426,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.36225108225108227,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.28,
+          "fallback": 0.8,
+          "interruption_rate": 0.37375512595196253,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.359050505050505,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.32,
+          "fallback": 0.7,
+          "interruption_rate": 0.380199179847686,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3536277056277057,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.27,
+          "fallback": 0.8,
+          "interruption_rate": 0.38429994141769186,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.35301010101010094,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.31,
+          "fallback": 0.7,
+          "interruption_rate": 0.39015817223198596,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.34716017316017317,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.3,
+          "fallback": 0.7,
+          "interruption_rate": 0.3989455184534271,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.34428571428571425,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.22,
+          "fallback": 0.9,
+          "interruption_rate": 0.40597539543058,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.337974025974026,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.21,
+          "fallback": 0.9,
+          "interruption_rate": 0.4141769185705917,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3329379509379509,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.28,
+          "fallback": 0.7,
+          "interruption_rate": 0.4182776801405975,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3327878787878788,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.27,
+          "fallback": 0.7,
+          "interruption_rate": 0.4276508494434681,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3277575757575757,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.26,
+          "fallback": 0.7,
+          "interruption_rate": 0.4358523725834798,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3234458874458874,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.22,
+          "fallback": 0.8,
+          "interruption_rate": 0.44053895723491504,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3184935064935065,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.21,
+          "fallback": 0.8,
+          "interruption_rate": 0.44815465729349735,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.31417893217893217,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.2,
+          "fallback": 0.8,
+          "interruption_rate": 0.4651435266549502,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.31159018759018764,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.23,
+          "fallback": 0.7,
+          "interruption_rate": 0.46631517281780904,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3112294372294372,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.29,
+          "fallback": 0.6,
+          "interruption_rate": 0.46924428822495606,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.31111976911976913,
+          "p90_latency_s": 0.6
+        },
+        {
+          "family": "gate",
+          "theta": 0.28,
+          "fallback": 0.6,
+          "interruption_rate": 0.4786174575278266,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.3065252525252525,
+          "p90_latency_s": 0.6
+        },
+        {
+          "family": "gate",
+          "theta": 0.22,
+          "fallback": 0.7,
+          "interruption_rate": 0.48096074985354426,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.299012987012987,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.21,
+          "fallback": 0.7,
+          "interruption_rate": 0.4879906268306971,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.29541991341991336,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.16,
+          "fallback": 0.9,
+          "interruption_rate": 0.502050380785003,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2906349206349207,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.17,
+          "fallback": 0.8,
+          "interruption_rate": 0.510837727006444,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2874285714285714,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.15,
+          "fallback": 0.9,
+          "interruption_rate": 0.520796719390744,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2825772005772006,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.16,
+          "fallback": 0.8,
+          "interruption_rate": 0.5289982425307557,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.277936507936508,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.21,
+          "fallback": 0.6,
+          "interruption_rate": 0.5377855887521968,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.27666089466089466,
+          "p90_latency_s": 0.6
+        },
+        {
+          "family": "gate",
+          "theta": 0.14,
+          "fallback": 0.9,
+          "interruption_rate": 0.5436438195664909,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.27351226551226554,
+          "p90_latency_s": 0.9
+        },
+        {
+          "family": "gate",
+          "theta": 0.15,
+          "fallback": 0.8,
+          "interruption_rate": 0.5454012888107791,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.27103318903318907,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.16,
+          "fallback": 0.7,
+          "interruption_rate": 0.562390158172232,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2652380952380952,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.14,
+          "fallback": 0.8,
+          "interruption_rate": 0.5670767428236673,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2632669552669553,
+          "p90_latency_s": 0.8
+        },
+        {
+          "family": "gate",
+          "theta": 0.15,
+          "fallback": 0.7,
+          "interruption_rate": 0.5787932044522555,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2594891774891775,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.13,
+          "fallback": 0.8,
+          "interruption_rate": 0.5846514352665495,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2580894660894661,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.12,
+          "fallback": 0.9,
+          "interruption_rate": 0.5869947275922671,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2573968253968254,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.14,
+          "fallback": 0.7,
+          "interruption_rate": 0.5992970123022847,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.25302164502164504,
+          "p90_latency_s": 0.7
+        },
+        {
+          "family": "gate",
+          "theta": 0.16,
+          "fallback": 0.6,
+          "interruption_rate": 0.6033977738722905,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.25253968253968256,
+          "p90_latency_s": 0.6
+        },
+        {
+          "family": "gate",
+          "theta": 0.12,
+          "fallback": 0.8,
+          "interruption_rate": 0.606912712360867,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24946031746031747,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.13,
+          "fallback": 0.7,
+          "interruption_rate": 0.6157000585823081,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24870995670995671,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.15,
+          "fallback": 0.6,
+          "interruption_rate": 0.6186291739894552,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24794516594516594,
+          "p90_latency_s": 0.6
+        },
+        {
+          "family": "gate",
+          "theta": 0.11,
+          "fallback": 0.8,
+          "interruption_rate": 0.6274165202108963,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24687157287157285,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.12,
+          "fallback": 0.7,
+          "interruption_rate": 0.6362038664323374,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24152380952380959,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.09,
+          "fallback": 0.9,
+          "interruption_rate": 0.6520210896309314,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.24027417027417025,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.13,
+          "fallback": 0.6,
+          "interruption_rate": 0.6526069127123608,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2393304473304473,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.08,
+          "fallback": 1.0,
+          "interruption_rate": 0.6619800820152314,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.23769696969696968,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.09,
+          "fallback": 0.8,
+          "interruption_rate": 0.6684241359109548,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2347907647907648,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.12,
+          "fallback": 0.6,
+          "interruption_rate": 0.6707674282366726,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2335873015873016,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.08,
+          "fallback": 0.9,
+          "interruption_rate": 0.6736965436438196,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.23322366522366522,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.11,
+          "fallback": 0.6,
+          "interruption_rate": 0.687170474516696,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.23186435786435788,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.08,
+          "fallback": 0.8,
+          "interruption_rate": 0.6895137668424136,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.22875036075036076,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.08,
+          "fallback": 0.7,
+          "interruption_rate": 0.7117750439367311,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.22427705627705624,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.09,
+          "fallback": 0.6,
+          "interruption_rate": 0.7229056824838899,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.22382395382395384,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.07,
+          "fallback": 0.8,
+          "interruption_rate": 0.7305213825424721,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.22270995670995675,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.08,
+          "fallback": 0.6,
+          "interruption_rate": 0.7428236672524897,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.21980375180375183,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.07,
+          "fallback": 0.7,
+          "interruption_rate": 0.7521968365553603,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.21924675324675322,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.07,
+          "fallback": 0.6,
+          "interruption_rate": 0.7756297598125366,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2157835497835498,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.05,
+          "fallback": 0.8,
+          "interruption_rate": 0.80199179847686,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.2140808080808081,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.06,
+          "fallback": 0.6,
+          "interruption_rate": 0.8025776215582894,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.21348629148629153,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.05,
+          "fallback": 0.7,
+          "interruption_rate": 0.8189806678383128,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.21206060606060606,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "gate",
+          "theta": 0.05,
+          "fallback": 0.6,
+          "interruption_rate": 0.8347978910369068,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.21004040404040408,
+          "p90_latency_s": 0.202
+        },
+        {
+          "family": "adaptive",
+          "a": 0.2,
+          "b": 0.0,
+          "interruption_rate": 0.9935559461042766,
+          "median_latency_s": 0.202,
+          "mean_latency_s": 0.202,
+          "p90_latency_s": 0.202
+        }
+      ],
+      "chosen_on_dev": {
+        "interrupt_le_5pct": {
+          "policy": {
+            "family": "adaptive",
+            "a": 0.2,
+            "b": 1.6
+          },
+          "dev": {
+            "family": "adaptive",
+            "a": 0.2,
+            "b": 1.6,
+            "interruption_rate": 0.035227272727272725,
+            "median_latency_s": 0.9469487913012009,
+            "mean_latency_s": 0.9934433085526877,
+            "p90_latency_s": 1.5425097160216499
+          },
+          "eval": {
+            "interruption_rate": 0.03925014645577036,
+            "median_latency_s": 0.9919121374084479,
+            "mean_latency_s": 0.9928587881027595,
+            "p90_latency_s": 1.5817288089796229
+          }
+        },
+        "interrupt_le_10pct": {
+          "policy": {
+            "family": "gate",
+            "theta": 0.55,
+            "fallback": 1.3
+          },
+          "dev": {
+            "family": "gate",
+            "theta": 0.55,
+            "fallback": 1.3,
+            "interruption_rate": 0.1,
+            "median_latency_s": 1.3,
+            "mean_latency_s": 0.7715875000000001,
+            "p90_latency_s": 1.3
+          },
+          "eval": {
+            "interruption_rate": 0.09548916227299356,
+            "median_latency_s": 1.3,
+            "mean_latency_s": 0.7945714285714288,
+            "p90_latency_s": 1.3
+          }
+        },
+        "interrupt_le_20pct": {
+          "policy": {
+            "family": "gate",
+            "theta": 0.37,
+            "fallback": 1.1
+          },
+          "dev": {
+            "family": "gate",
+            "theta": 0.37,
+            "fallback": 1.1,
+            "interruption_rate": 0.19772727272727272,
+            "median_latency_s": 0.202,
+            "mean_latency_s": 0.5219125,
+            "p90_latency_s": 1.1
+          },
+          "eval": {
+            "interruption_rate": 0.19332161687170474,
+            "median_latency_s": 0.202,
+            "mean_latency_s": 0.522066378066378,
+            "p90_latency_s": 1.1
+          }
+        }
+      }
+    }
+  }
+}
