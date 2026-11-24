@@ -46,3 +46,7 @@ Grey Mirror is interpretive pattern analysis. It is not therapy, diagnosis, lega
 - [Sample report](https://thegreymirror.com/grey-mirror/sample-report/cinematic)
 - [Pricing](https://thegreymirror.com/grey-mirror/relationship-report-pricing)
 - [iPhone app](https://apps.apple.com/us/app/the-grey-mirror-chat-analysis/id6799236359)
+
+---
+
+**Built by [Wentropy Labs](https://wentropylabs.com)** · [Grey Mirror](https://thegreymirror.com), the flagship text message analyzer for relationships · [Unbubble](https://thegreymirror.com/grey-mirror/unbubble), the 100% on-device iPhone message exporter · [Textimony](https://textimony.io) · [LinkedIn](https://www.linkedin.com/company/wentropy-labs) · [Crunchbase](https://www.crunchbase.com/organization/wentropy-labs)
